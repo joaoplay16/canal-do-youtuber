@@ -1,3 +1,210 @@
 <resources>
-    <string name="app_name">Canal do Youtuber</string>
+    <string name="app_name">
+        Canal Vinícius Thiengo
+    </string>
+
+
+    <!-- MainActivity -->
+    <string name="channel_name">
+        Vinícius Thiengo
+    </string>
+    <string name="channel_desc">
+        Seu canal sobre Desenvolvimento de Aplicativos
+        Android e TI.
+    </string>
+    <string name="youtube_content_icon_content_desc">
+        Ícone do YouTube.
+    </string>
+    <string name="channel_thumb_content_desc">
+        Thumb do canal YouTube Vinícius Thiengo.
+    </string>
+    <string name="channel_toast_alert">
+        É preciso ter o aplicativo do YouTube instalado
+        para acessar o canal.
+    </string>
+
+
+    <!-- Menu -->
+    <string name="item_menu_last_video">
+        Vídeo
+    </string>
+    <string name="item_menu_social_networks">
+        Redes
+    </string>
+    <string name="item_menu_play_lists">
+        Play Lists
+    </string>
+    <string name="item_menu_exclusive_groups">
+        Grupos
+    </string>
+    <string name="item_menu_about_channel">
+        Sobre
+    </string>
+    <string name="item_menu_books">
+        Livros T.I.
+    </string>
+    <string name="item_menu_courses">
+        Cursos T.I.
+    </string>
+    <string name="item_menu_business">
+        Business
+    </string>
+
+
+    <!-- LastVideoFragment -->
+    <string name="last_video_content_title">
+        Último vídeo liberado
+    </string>
+    <string name="last_video_play_content_desc">
+        Ícone de play do vídeo.
+    </string>
+    <string name="volume_icon_content_desc">
+        Ícone de controle volume.
+    </string>
+    <string name="head_phones_icon_content_desc">
+        Ícone de fones de ouvido.
+    </string>
+    <string name="video_resolution_icon_content_desc">
+        Ícone de controle de resolução (HD).
+    </string>
+    <string name="like_icon_content_desc">
+        Ícone de like, gostei do conteúdo.
+    </string>
+    <string name="touch_to_watch">
+        Toque para assistir
+    </string>
+    <string name="leave_a_comment">
+        Deixe seu comentário
+    </string>
+    <string name="last_video_toast_alert">
+        É preciso ou o aplicativo do YouTube ou um navegador
+        Web para que o vídeo \"%s\" comece.
+    </string>
+
+
+
+    <!-- SocialNetworksFragment -->
+    <string name="social_networks_content_title">
+        Todas as redes do canal com conteúdos exclusivos
+    </string>
+    <string name="social_network_toast_alert">
+        É preciso ao menos um aplicativo de navegador Web
+        para você poder acessar a rede \"%s\" do canal.
+    </string>
+
+
+    <!-- PlayListsFragment -->
+    <string name="playlists_content_title">
+        PlayLists do canal
+    </string>
+    <string name="playlist_toast_alert">
+        É preciso ou o aplicativo do YouTube ou um navegador
+        Web para que a PlayList \"%s\" seja acessada.
+    </string>
+    <string name="no_playlists_yet">
+        Nenhuma PlayList disponível no canal!
+    </string>
+
+
+    <!-- GroupsFragment -->
+    <string name="groups_content_title">
+        Grupos exclusivos do canal
+    </string>
+    <string name="groups_desc">A
+        seguir todos os grupos exclusivos do canal que você
+        pode fazer parte. Estamos esperando por você também
+        nas nossas comunidades exclusivas.
+    </string>
+    <string name="groups_toast_alert">
+        É preciso o aplicativo do \"%s\" para abrir o grupo
+        exclusivo \"%s\".
+    </string>
+
+
+    <!-- AboutChannelFragment -->
+    <string name="about_channel_content_title">
+        Conheça um pouco mais do porquê do canal
+    </string>
+    <string name="about_channel_full_desc">A
+        proposta do canal é mostrar, passo a passo, as mais
+        diversas APIs, bibliotecas e frameworks Android para
+        o desenvolvimento de aplicativos mobile com qualidade.
+
+        \n\nO canal é uma extensão do Blog Thiengo.com.br.
+
+        \n\nUma extensão em vídeo dos artigos que são disponibilizados
+        em texto e também (alguns deles) em PDF.
+
+        \n\nComo conteúdo também teremos a construção de alguns
+        aplicativos Android por completo.
+
+        \n\nAlguns desses conteúdos de apps completos serão em
+        formato de série. Outros em formato único, tudo em
+        uma única “tacada” (uma vídeo aula).
+
+        \n\nPara sugerir novos conteúdos e também tirar dúvidas
+        você pode estar entrando em contato com o Thiengo
+        pelos endereços a seguir:
+
+        \n\n<b>➙ E-mail:</b> thiengocalopsita@gmail.com
+
+        \n\n<b>➙ Contato Blog:</b> https://www.Thiengo.com.br/contato
+
+        \n\nÉ isso.
+
+        \n\nAbraço.
+    </string>
+
+
+    <!-- BooksFragment -->
+    <string name="books_content_title">
+        Conheça meus livros
+    </string>
+    <string name="books_toast_alert">
+        É preciso ao menos um navegador Web para abrir a
+        página do livro \"%s\".
+    </string>
+
+
+    <!-- CoursesFragment -->
+    <string name="courses_content_title">
+        Conheça meus cursos em vídeo
+    </string>
+    <string name="complement_amount_videos">
+        🎥 %d vídeo aulas
+    </string>
+    <string name="course_toast_alert">
+        É preciso um navegador Web para abrir a página do
+        curso \"%s\".
+    </string>
+
+
+    <!-- BusinessContactFragment -->
+    <string name="business_contacts_content_title">
+        Quer anunciar? Fechar negócios?
+    </string>
+    <string name="business_contacts_desc">A
+        seguir os canais de contato comercial com o
+        canal e o Blog.
+
+        \n\nIsso para que você possa colocar a sua marca em
+        todas as mídias do canal e assim crescer
+        exponencialmente a sua <em>brand</em>.
+    </string>
+    <string name="business_contact_toast_alert">
+        É preciso o aplicativo \"%s\" para poder entrar em
+        contato pelo \"%s\".
+    </string>
+
+
+    <!-- UtilNotification -->
+    <string name="notification_verbose_name">
+        🎬 Vídeo novo no canal
+    </string>
+    <string name="notification_verbose_description">
+        Notificação de novos vídeos de desenvolvimento
+        Android que são liberados no canal YouTube
+        Vinícius Thiengo.
+    </string>
 </resources>
+
