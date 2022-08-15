@@ -1,7 +1,8 @@
-package com.playlab.canaldoyoutuber
+package com.playlab.canaldoyoutuber.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.playlab.canaldoyoutuber.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
