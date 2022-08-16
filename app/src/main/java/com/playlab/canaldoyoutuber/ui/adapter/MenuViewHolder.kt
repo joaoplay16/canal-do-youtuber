@@ -3,7 +3,6 @@ package com.playlab.canaldoyoutuber.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.view.menu.MenuAdapter
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.playlab.canaldoyoutuber.R
