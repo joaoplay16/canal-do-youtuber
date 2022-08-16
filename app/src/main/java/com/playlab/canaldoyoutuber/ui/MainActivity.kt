@@ -6,14 +6,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
+import com.playlab.canaldoyoutuber.data.fixed.MenuItemsData
+import com.playlab.canaldoyoutuber.databinding.ActivityMainBinding
+import com.playlab.canaldoyoutuber.ui.adapter.MenuAdapter
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        initBottomMenu()
     }
 
     /**
@@ -49,4 +58,29 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
     }
+
+    /**
+     * Inicializa o menu principal do aplicativo, o
+     * BottomMenu.
+     */
+    private fun initBottomMenu(){
+        val layoutManager = GridLayoutManager(
+            this,
+            MenuAdapter.NUMBER_COLUMNS,
+            RecyclerView.HORIZONTAL,
+            false
+        )
+        with(binding.rvMenu) {
+            this.layoutManager = layoutManager
+            setHasFixedSize(true)
+            adapter = MenuAdapter(
+                context = this@MainActivity,
+                items = MenuItemsData.getItems(res = resources),
+                changeFragmentCallback = { item ->
+                    { /* TODO */ }
+                }
+            )
+        }
+    }
+
 }
