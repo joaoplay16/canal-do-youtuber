@@ -35,6 +35,9 @@ abstract class YouTubeConfig {
             const val VIDEO_THUMB_URL_TEMPLATE = "https://i." +
             "ytimg.com/vi/%s/hqdefault.jpg"
 
+            const val PLAYLIST_URL_TEMPLATE = "https://www.youtube." +
+            "com/playlist?list=%s"
+
         }
     }
 }
