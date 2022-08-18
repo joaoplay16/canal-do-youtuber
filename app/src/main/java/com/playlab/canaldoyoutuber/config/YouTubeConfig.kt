@@ -28,6 +28,13 @@ abstract class YouTubeConfig {
              * Constante com a URL do canal.
              */
             const val CHANNEL_URL = "https://www.youtube.com/channel/$CHANNEL_ID"
+
+            const val VIDEO_URL_TEMPLATE = "https://www." +
+            "youtube.com/watch?v=%s"
+
+            const val VIDEO_THUMB_URL_TEMPLATE = "https://i." +
+            "ytimg.com/vi/%s/hqdefault.jpg"
+
         }
     }
 }
