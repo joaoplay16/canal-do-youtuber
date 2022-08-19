@@ -2,6 +2,7 @@ package com.playlab.canaldoyoutuber.data.dynamic
 
 import android.content.Context
 import com.playlab.canaldoyoutuber.model.LastVideo
+import com.playlab.canaldoyoutuber.model.PlayList
 import kotlin.concurrent.thread
 
 /**
@@ -112,6 +113,70 @@ class UtilDatabase private constructor( private val context: Context) {
                 dataBase.close()
 
                 callback(lastVideo)
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+    /**
+     * Salva em banco de dados local os dados das
+     * PlayLists do canal obtidas pelos algoritmos
+     * do app.
+     *
+     * Note que qualquer acesso ao banco de dados
+     * local via Room API deve ser fora da Thread
+     * Principal, por isso a necessidade de
+     * thread{} no código do método a seguir.
+     *
+     * @param playLists PlayLists disponíveis no
+     * canal.
+     */
+    fun savePlayLists(playLists: List<PlayList>) {
+        thread {
+            try {
+                val dataBase = getDatabase()
+                /**
+                 * Garantindo que sempre terá em
+                 * banco de dados local somente
+                 * as PlayLists ainda ativas no
+                 * canal YouTube do aplicativo.
+                 */
+                dataBase
+                    .playListDao()
+                    .deleteAll()
+                dataBase
+                    .playListDao()
+                    .insertAll(
+                        playLists = playLists
+                    )
+                dataBase.close()
+            } catch (e: Exception) {
+            }
+
+        }
+    }
+
+    /**
+     * Retorna, via callback, todas as PlayLists
+     * do canal salvas em persistência local ou
+     * null caso não haja alguma.
+     *
+     * Note que qualquer acesso ao banco de dados
+     * local via Room API deve ser fora da Thread
+     * Principal, por isso a necessidade de
+     * thread{} no código do método a seguir.
+     *
+     * @param callback função que vai trabalhar o
+     * retorno de [dataBase].playListDao().getAll().
+     */
+    fun getAllPlayLists(callback: (List<PlayList>?) -> Unit) {
+        thread {
+            try {
+                val dataBase = getDatabase()
+                val playLists = dataBase.playListDao().getAll()
+                dataBase.close()
+
+                callback(playLists)
             } catch (e: Exception) {}
         }
     }
