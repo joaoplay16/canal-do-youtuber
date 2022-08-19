@@ -26,29 +26,28 @@ class UtilDatabase private constructor( private val context: Context) {
          * aplicativo.
          */
         private var instance: UtilDatabase? = null
-    }
 
-    /**
-     * Método que aplica, junto à propriedade
-     * [instance], o padrão Singleton em classe.
-     * Garantindo que somente uma instância de
-     * [UtilDatabase] estará disponível durante
-     * toda a execução do app. Ajudando a
-     * diminuir a possibilidade de vazamento
-     * de memória.
-     *
-     * @param context contexto do aplicativo.
-     * @return instância única de [UtilDatabase].
-     */
-    fun getInstance(context: Context): UtilDatabase {
-        if (instance == null) {
-            instance = UtilDatabase(
-                context = context
-            )
+        /**
+         * Método que aplica, junto à propriedade
+         * [instance], o padrão Singleton em classe.
+         * Garantindo que somente uma instância de
+         * [UtilDatabase] estará disponível durante
+         * toda a execução do app. Ajudando a
+         * diminuir a possibilidade de vazamento
+         * de memória.
+         *
+         * @param context contexto do aplicativo.
+         * @return instância única de [UtilDatabase].
+         */
+        fun getInstance(context: Context): UtilDatabase {
+            if (instance == null) {
+                instance = UtilDatabase(
+                    context = context
+                )
+            }
+            return instance!!
         }
-        return instance!!
     }
-
     /**
      * Retorna uma instância do banco de dados
      * local para que seja possível manipular os
