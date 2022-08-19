@@ -3,6 +3,8 @@ package com.playlab.canaldoyoutuber.data.dynamic
 import android.content.Context
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.playlab.canaldoyoutuber.data.fixed.LastVideoData
+import com.playlab.canaldoyoutuber.data.fixed.PlayListsData
 
 /**
  * Classe responsável por inicializar a base de
@@ -33,13 +35,21 @@ class InitialDataCallback(
      * dados local.
      */
     private fun initLastVideo(){
-        /* TODO */
+        UtilDatabase
+            .getInstance( context = context )
+            .saveLastVideo(
+                lastVideo = LastVideoData.getInitialVideo()
+            )
     }
     /**
      * Inicializa a tabela PlayList do banco de
      * dados local.
      */
     private fun initPlayLists(){
-        /* TODO */
+        UtilDatabase
+            .getInstance( context = context )
+            .savePlayLists(
+                playLists = PlayListsData.getInitialPlayLists()
+            )
     }
 }
