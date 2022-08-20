@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 }
 
 android {
@@ -13,6 +14,12 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+
+        manifestPlaceholders = [
+                onesignal_app_id: '40e0af51-6308-4300-8515-8ae4593f24f2',
+                onesignal_google_project_number: 'REMOTE'
+        ]
+
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,5 +65,11 @@ dependencies {
      */
     implementation 'com.squareup.picasso:picasso:2.71828'
 
+    /**
+     * Para uso da OneSignal API. API redundante de
+     * dado de novo vídeo YouTube em projeto.
+     */
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+    implementation 'com.google.firebase:firebase-messaging:23.0.7'
 
 }
