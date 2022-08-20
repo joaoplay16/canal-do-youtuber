@@ -2,27 +2,157 @@ package com.playlab.canaldoyoutuber.ui
 
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
 import com.playlab.canaldoyoutuber.data.fixed.MenuItemsData
 import com.playlab.canaldoyoutuber.databinding.ActivityMainBinding
+import com.playlab.canaldoyoutuber.model.MenuItem
 import com.playlab.canaldoyoutuber.ui.adapter.MenuAdapter
+import com.playlab.canaldoyoutuber.ui.fragment.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    companion object{
+        /**
+         * Constante com o identificador único da
+         * pilha de fragmentos em memória.
+         */
+        const val FRAG_STACK_ID = "frag_stack_id"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        if( supportFragmentManager.findFragmentByTag( FRAG_STACK_ID )
+            == null ) {
+
+            changeFragment(
+                fragment = LastVideoFragment(),
+                fragKey = getFragmentInKey()
+            )
+        }
+
         initBottomMenu()
+    }
+
+    /**
+     * Muda o fragmento que deve ficar em foreground
+     * (primeiro plano).
+     *
+     * @param fragment fragmento que deverá ficar
+     * em foreground.
+     * @param fragKey identificador único do
+     * fragmento que vai ficar em foreground.
+     */
+    private fun changeFragment(
+        fragment: Fragment,
+        fragKey: String
+    ) {
+        /**
+         * * Animação na transição entre fragmentos.
+         */
+        val fragTransaction = supportFragmentManager.beginTransaction()
+        fragTransaction.setCustomAnimations(
+            android.R.anim.fade_in,
+            android.R.anim.fade_out
+        )
+        /**
+         * Mantendo o fragmento em memória com um
+         * "localizador" único dele.
+         */
+        fragTransaction.replace(
+            R.id.ll_content_container,
+            fragment,
+            fragKey
+        )
+        fragTransaction.addToBackStack( FRAG_STACK_ID )
+        fragTransaction.commit()
+    }
+
+    /**
+     * Retorna o identificador único (id) de
+     * fragmento em memória de acordo com o
+     * identificador único de item de menu
+     * informado como parâmetro.
+     *
+     * Com o id de fragmento é possível verificar
+     * se ele já está em pilha de fragmentos ou
+     * não.
+     *
+     * @param itemId identificador único de item de
+     * menu.
+     * @return identificador único do fragmento.
+     */
+    private fun getFragmentInKey( itemId: Int = R.id.last_video )
+            = when( itemId ){
+        R.id.social_networks -> SocialNetworksFragment.KEY
+        R.id.play_lists -> PlayListsFragment.KEY
+        R.id.exclusive_groups -> GroupsFragment.KEY
+        R.id.about_channel -> AboutChannelFragment.KEY
+        R.id.books -> BooksFragment.KEY
+        R.id.courses -> CoursesFragment.KEY
+        R.id.business -> BusinessContactsFragment.KEY
+        else -> LastVideoFragment.KEY
+    }
+
+    /**
+     * Retorna o fragmento correto de acordo com o
+     * identificador único de item de menu informado
+     * como parâmetro.
+     *
+     * Se o fragmento estiver em pilha de fragmentos,
+     * memória, então ele é obtido da pilha ao invés
+     * de ser criado um novo. Diminuindo assim a
+     * possibilidade de vazamento de memória.
+     *
+     * @param itemId identificador único de item de
+     * menu.
+     * @return objeto fragmento correto.
+     */
+    private fun getFragment( itemId: Int = R.id.last_video ) : Fragment {
+        val key = getFragmentInKey(itemId = itemId)
+        var fragment = supportFragmentManager
+            .findFragmentByTag(key)
+        if (fragment == null) {
+            fragment = when (itemId) {
+                R.id.social_networks -> SocialNetworksFragment()
+                R.id.play_lists -> PlayListsFragment()
+                R.id.exclusive_groups -> GroupsFragment()
+                R.id.about_channel -> AboutChannelFragment()
+                R.id.books -> BooksFragment()
+                R.id.courses -> CoursesFragment()
+                R.id.business -> BusinessContactsFragment()
+                else -> LastVideoFragment()
+            }
+        }
+        return fragment
+    }
+
+    /**
+     * Coloca em tela o fragmento correto de acordo
+     * com o item de menu informado como parâmetro.
+     *
+     * @param item item de menu.
+     */
+    private fun fragmentOnScreen( item: MenuItem){
+        val fragment = getFragment( itemId = item.id )
+        val fragKey = getFragmentInKey( itemId = item.id )
+        changeFragment(
+            fragment = fragment,
+            fragKey = fragKey
+        )
     }
 
     /**
@@ -77,10 +207,26 @@ class MainActivity : AppCompatActivity() {
                 context = this@MainActivity,
                 items = MenuItemsData.getItems(res = resources),
                 changeFragmentCallback = { item ->
-                    { /* TODO */ }
+                    fragmentOnScreen(item = item)
                 }
             )
         }
     }
 
+    override fun onBackPressed() {
+        /**
+         * O código abaixo limpa a pilha de
+         * fragmentos do app para que seja
+         * possível deixar (fechar) o aplicativo
+         * sem a necessidade de voltar para cada
+         * um dos fragmentos já navegados pelo
+         * usuário.
+         */
+        supportFragmentManager
+            .popBackStack(
+                null,
+                FragmentManager.POP_BACK_STACK_INCLUSIVE
+            )
+        super.onBackPressed()
+    }
 }
