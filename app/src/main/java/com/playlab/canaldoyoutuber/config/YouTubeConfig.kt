@@ -30,14 +30,28 @@ abstract class YouTubeConfig {
             const val CHANNEL_URL = "https://www.youtube.com/channel/$CHANNEL_ID"
 
             const val VIDEO_URL_TEMPLATE = "https://www." +
-            "youtube.com/watch?v=%s"
+                    "youtube.com/watch?v=%s"
 
             const val VIDEO_THUMB_URL_TEMPLATE = "https://i." +
-            "ytimg.com/vi/%s/hqdefault.jpg"
+                    "ytimg.com/vi/%s/hqdefault.jpg"
 
             const val PLAYLIST_URL_TEMPLATE = "https://www.youtube." +
-            "com/playlist?list=%s"
+                    "com/playlist?list=%s"
 
+        }
+    }
+
+    abstract class Notification {
+        companion object {
+            /**
+             * Constantes com definições para acesso aos
+             * dados de novo "último vídeo" liberado no
+             * canal YouTube do app. Dados presentes em
+             * URL de vídeo na notificação push OneSignal.
+             */
+            const val ALTERNATIVE_URL = "https://youtu.be/"
+            const val VIDEO_PARAM = "v"
+            const val EMPTY = ""
         }
     }
 }
