@@ -1,6 +1,8 @@
 package com.playlab.canaldoyoutuber.notification
 import com.onesignal.NotificationExtenderService
 import com.onesignal.OSNotificationReceivedResult
+import com.playlab.canaldoyoutuber.config.OneSignalConfig
+import org.json.JSONObject
 
 /**
  * Serviço responsável por interceptar a notificação
@@ -38,9 +40,25 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
      * continuar.
      */
     override fun onNotificationProcessing(
-        notification: OSNotificationReceivedResult?): Boolean {
+        notification: OSNotificationReceivedResult?
+    ): Boolean {
 
         /* TODO */
         return true
     }
+
+    /**
+     * Retorna o dado de descrição do "último vídeo" se
+     * ele estiver presente no JSON de dados que chegou
+     * junto a notificação OneSignal.
+     *
+     * @param json dados JSON obtidos de notificação.
+     * @return dado de descrição do vídeo.
+     */
+    private fun getDescriptionFromJson(json: JSONObject) =
+        if (!json.isNull(OneSignalConfig.Notification.DESCRIPTION)) {
+            json.getString(OneSignalConfig.Notification.DESCRIPTION)
+        } else {
+            OneSignalConfig.Notification.EMPTY
+        }
 }
