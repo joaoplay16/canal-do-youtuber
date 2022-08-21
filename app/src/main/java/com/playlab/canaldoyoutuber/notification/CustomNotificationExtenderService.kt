@@ -48,7 +48,13 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
         notification: OSNotificationReceivedResult?
     ): Boolean {
 
-        /* TODO */
+        val lastVideo = getLastVideoFromJson(
+            json = notification?.payload?.additionalData
+        )
+        if( lastVideo != null ){
+            ifNewLastVideoThenSaveAndNotify( lastVideo = lastVideo )
+        }
+
         return true
     }
 
@@ -152,7 +158,8 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
                 if (it == null
                     || !it.uid.equals(lastVideo.uid)
                     || !it.title.equals(lastVideo.title)
-                    || !it.description.equals(lastVideo.description) ){
+                    || !it.description.equals(lastVideo.description)
+                ) {
 
                     UtilDatabase
                         .getInstance(context = this)
