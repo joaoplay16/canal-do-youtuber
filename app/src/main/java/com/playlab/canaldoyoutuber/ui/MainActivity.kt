@@ -29,7 +29,18 @@ class MainActivity : AppCompatActivity() {
          * pilha de fragmentos em memória.
          */
         const val FRAG_STACK_ID = "frag_stack_id"
-    }
+
+        /**
+         * Propriedade estática que mantém o estado
+         * atual da atividade. Se ela está ou não em
+         * foreground. Está propriedade é acessada
+         * em outras partes do aplicativo que
+         * dependem desta informação.
+         */
+        var APP_FOREGROUND =
+            MainActivityForegroundStatus.IS_NOT_IN_FOREGROUND
+
+}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -48,7 +59,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         initBottomMenu()
+    }
+
+    override fun onResume() {
+        super.onResume()
         removeStatusBarNotification()
+        APP_FOREGROUND = MainActivityForegroundStatus.IS_IN_FOREGROUND
+    }
+    override fun onPause() {
+        super.onPause()
+        APP_FOREGROUND = MainActivityForegroundStatus.IS_NOT_IN_FOREGROUND
     }
 
     /**
