@@ -1,10 +1,12 @@
 package com.playlab.canaldoyoutuber.model
 
 import android.net.Uri
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
+import kotlinx.android.parcel.Parcelize
 
 /**
  * O último vídeo público disponível no canal
@@ -34,12 +36,13 @@ import com.playlab.canaldoyoutuber.config.YouTubeConfig
  * @constructor cria um objeto completo do tipo
  * [LastVideo].
 !*/
-
+@Parcelize
 @Entity
 data class LastVideo(
     @PrimaryKey val uid: String,
     @ColumnInfo( name = "title" ) val title: String,
-    @ColumnInfo( name = "description" ) val description: String = "" ) {
+    @ColumnInfo( name = "description" ) val description: String = "" )
+    : Parcelable{
     /**
      * @property thumbUrl contém a thumb URL
      * do vídeo. O método set() foi sobrescrito
