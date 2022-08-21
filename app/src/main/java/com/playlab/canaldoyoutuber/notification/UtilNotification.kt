@@ -2,10 +2,13 @@ package com.playlab.canaldoyoutuber.notification
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.playlab.canaldoyoutuber.R
+import com.playlab.canaldoyoutuber.ui.MainActivity
 
 /**
  * Classe utilitária que permite o fácil acesso à
@@ -78,13 +81,43 @@ class UtilNotification private constructor(
             name,
             importance
         )
-        .apply {
-            this.description = description
-        }
+            .apply {
+                this.description = description
+            }
         val notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager?
 
         notificationManager?.createNotificationChannel( channel )
     }
+
+    /**
+     * Configura e retorna uma [PendingIntent] que
+     * acionará a [MainActivity] do aplicativo caso
+     * a notificação push do app seja acionada pelo
+     * usuário.
+     *
+     * @return [PendingIntent] configurada para
+     * abertura de app.
+     */
+    private fun getPendingIntent() : PendingIntent {
+
+        val intent = Intent(
+            context,
+            MainActivity::class.java
+        )
+        .apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        val pendingIntent: PendingIntent = PendingIntent.getActivity(
+            context,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+
+        return pendingIntent
+    }
+
 }
