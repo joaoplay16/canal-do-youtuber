@@ -1,13 +1,17 @@
 package com.playlab.canaldoyoutuber.notification
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import com.playlab.canaldoyoutuber.R
+import com.playlab.canaldoyoutuber.model.LastVideo
 import com.playlab.canaldoyoutuber.ui.MainActivity
 
 /**
@@ -100,6 +104,7 @@ class UtilNotification private constructor(
      * @return [PendingIntent] configurada para
      * abertura de app.
      */
+    @RequiresApi( Build.VERSION_CODES.O )
     private fun getPendingIntent() : PendingIntent {
 
         val intent = Intent(
@@ -114,10 +119,56 @@ class UtilNotification private constructor(
             context,
             0,
             intent,
-            PendingIntent.FLAG_UPDATE_CURRENT,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         return pendingIntent
     }
 
+    /**
+     * Retorna o objeto de notificação push completamente
+     * configurado para que a notificação seja apresentada
+     * de maneira a aumentar a conversão (toque / clique)
+     * nela.
+     *
+     * @param lastVideo último vídeo liberado em canal e
+     * que chegou ao aplicativo.
+     * @param bitmapBigPicture bitmap da thumb do último
+     * vídeo liberado.
+     * @return notificação adequadamente configurada.
+     */
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getNotification(
+        lastVideo: LastVideo,
+        bitmapBigPicture: Bitmap? = null ) : Notification {
+
+        val notification = NotificationCompat
+            .Builder(
+                context,
+                CHANNEL_ID
+            )
+            .setSmallIcon(R.drawable.ic_circular_play)
+            .setContentTitle(
+                context.getString(R.string.notification_verbose_name)
+            )
+            .setContentText(lastVideo.title)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION)
+            .setContentIntent(getPendingIntent())
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setAutoCancel(true)
+
+        if (bitmapBigPicture != null) {
+            notification
+                .setLargeIcon(bitmapBigPicture)
+                .setStyle(
+                    NotificationCompat
+                        .BigPictureStyle()
+                        .bigPicture(bitmapBigPicture)
+                        .bigLargeIcon(null)
+                )
+        }
+
+        return notification.build()
+    }
 }
