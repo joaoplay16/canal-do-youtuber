@@ -1,6 +1,8 @@
 package com.playlab.canaldoyoutuber.data.dynamic
 
 import android.content.Context
+import android.content.Intent
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.playlab.canaldoyoutuber.model.LastVideo
 import com.playlab.canaldoyoutuber.model.PlayList
 import kotlin.concurrent.thread
@@ -86,6 +88,8 @@ class UtilDatabase private constructor( private val context: Context) {
                     .lastVideoDao()
                     .insert(lastVideo = lastVideo)
                 dataBase.close()
+
+                newLastVideoBroadcast( lastVideo = lastVideo )
             } catch (e: Exception) {
             }
         }
@@ -178,5 +182,30 @@ class UtilDatabase private constructor( private val context: Context) {
                 callback(playLists)
             } catch (e: Exception) {}
         }
+    }
+
+    /**
+     * Via [LocalBroadcastManager] informa ao
+     * fragmento [LastVideoFragment] os dados do
+     * novo "último vídeo" que deve aparecer em
+     * tela.
+     *
+     * Somente terá efeito se o aplicativo
+     * estiver em foreground (primeiro plano).
+     *
+     * @param lastVideo último vídeo disponível
+     * no canal.
+     */
+    private fun newLastVideoBroadcast( lastVideo: LastVideo ) {
+
+        val intent = Intent(NewLastVideoBroadcast.FILTER_KEY)
+
+        intent.putExtra(
+            NewLastVideoBroadcast.DATA_KEY,
+            lastVideo
+        )
+        LocalBroadcastManager
+            .getInstance(context)
+            .sendBroadcast(intent)
     }
 }
