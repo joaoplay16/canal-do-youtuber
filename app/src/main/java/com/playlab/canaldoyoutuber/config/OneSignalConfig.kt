@@ -40,4 +40,26 @@ abstract class OneSignalConfig {
             const val ID = "40e0af51-6308-4300-8515-8ae4593f24f2"
         }
     }
+    abstract class Notification {
+        companion object Parameter {
+            /**
+             * Constantes com definições de campos
+             * de JSON para acesso aos dados
+             * enviados ao aplicativo via
+             * notificação push OneSignal.
+             */
+            const val VIDEO = "video"
+            const val TITLE = "title"
+            const val DESCRIPTION = "description"
+
+            /**
+             * Constante com uma definição de
+             * [String] vazia para retornos onde
+             * dados opcionais (como o dado de
+             * [DESCRIPTION]) não foram fornecidos
+             * em notificação push.
+             */
+            const val EMPTY = ""
+        }
+    }
 }
