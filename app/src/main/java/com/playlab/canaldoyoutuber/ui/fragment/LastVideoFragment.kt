@@ -1,13 +1,16 @@
 package com.playlab.canaldoyoutuber.ui.fragment
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.playlab.canaldoyoutuber.R
+import com.playlab.canaldoyoutuber.data.dynamic.NewLastVideoBroadcast
 import com.playlab.canaldoyoutuber.data.dynamic.UtilDatabase
 import com.playlab.canaldoyoutuber.data.fixed.LastVideoData
 import com.playlab.canaldoyoutuber.databinding.FragmentLastVideoBinding
@@ -24,6 +27,7 @@ import com.squareup.picasso.Picasso
 
 class LastVideoFragment : Fragment() {
     private lateinit var binding: FragmentLastVideoBinding
+    private lateinit var localBroadcast: NewLastVideoBroadcast
 
     companion object {
         /**
@@ -46,6 +50,8 @@ class LastVideoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initLocalBroadcast()
+
         /**
          * Para garantir que o banco de dados local
          * será acessado apenas na primeira vez que
@@ -62,6 +68,11 @@ class LastVideoFragment : Fragment() {
             .getLastVideo{
                 setUiModel( lVideo = it )
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        destroyLocalBroadcast()
     }
 
     override fun onCreateView(
@@ -177,5 +188,50 @@ class LastVideoFragment : Fragment() {
             return
         }
         requireActivity().startActivity(intent)
+    }
+
+    /**
+     * Inicializa o LocalBroadcast para que seja possível
+     * a atualização da UI de "último vídeo" liberado
+     * quando o aplicativo está em foreground e um novo
+     * "último vídeo" é recebido por ele.
+     */
+    private fun initLocalBroadcast() {
+
+        val intentFilter = IntentFilter(NewLastVideoBroadcast.FILTER_KEY)
+
+        localBroadcast = NewLastVideoBroadcast(
+            fragment = this
+        )
+
+        LocalBroadcastManager
+            .getInstance(requireActivity())
+            .registerReceiver(
+                localBroadcast,
+                intentFilter
+            )
+    }
+
+    /**
+     * Destrói o LocalBroadcast quando o aplicativo não
+     * mais está em foreground. Pois não será possível
+     * atualizar a UI neste caso.
+     */
+    private fun destroyLocalBroadcast() {
+        LocalBroadcastManager
+            .getInstance(requireActivity())
+            .unregisterReceiver(localBroadcast)
+    }
+
+    /**
+     * Configura na propriedade [lastVideo] os dados do
+     * último vídeo liberado em canal e recebidos em
+     * aplicativo.
+     *
+     * @param video último vídeo liberado em canal.
+     */
+    fun newLastVideoData( video: LastVideo ){
+        lastVideo = video
+        setUiModel( lVideo = video )
     }
 }
