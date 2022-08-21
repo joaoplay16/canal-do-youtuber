@@ -2,7 +2,6 @@ package com.playlab.canaldoyoutuber
 
 import android.app.Application
 import com.onesignal.OneSignal
-import com.playlab.canaldoyoutuber.config.OneSignalConfig
 
 /**
  * Classe de sistema e de objeto único enquanto
@@ -48,10 +47,11 @@ class CustomApplication: Application() {
     * e trabalhadas de maneira personalizada.
     */
     private fun oneSignalInit() {
-        // Enable verbose OneSignal logging to debug issues if needed.
-        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE)
-        // OneSignal Initialization
-        OneSignal.initWithContext(this);
-        OneSignal.setAppId(OneSignalConfig.App.ID);
+        OneSignal.startInit( this )
+            .inFocusDisplaying(
+                OneSignal.OSInFocusDisplayOption.Notification
+            )
+            .unsubscribeWhenNotificationsAreDisabled( true )
+            .init()
     }
 }
