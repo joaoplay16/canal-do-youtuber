@@ -4,6 +4,7 @@ import com.onesignal.NotificationExtenderService
 import com.onesignal.OSNotificationReceivedResult
 import com.playlab.canaldoyoutuber.config.OneSignalConfig
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
+import com.playlab.canaldoyoutuber.data.dynamic.UtilDatabase
 import com.playlab.canaldoyoutuber.model.LastVideo
 import org.json.JSONObject
 import java.net.URI
@@ -83,7 +84,8 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
          */
         if (json == null
             || json.isNull(OneSignalConfig.Notification.VIDEO)
-            || json.isNull (OneSignalConfig.Notification.TITLE) ){
+            || json.isNull(OneSignalConfig.Notification.TITLE)
+        ) {
             return null
         }
 
@@ -91,7 +93,7 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
         val title = json.getString(OneSignalConfig.Notification.TITLE)
         var lastVideo: LastVideo? = null
 
-        if (!url.isEmpty() && !title.isEmpty()){
+        if (!url.isEmpty() && !title.isEmpty()) {
             val urlQuery = UrlQuerySanitizer(url)
 
             if (!urlQuery.getValue(YouTubeConfig.Notification.VIDEO_PARAM)
@@ -108,7 +110,9 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
                         thumbUrl = YouTubeConfig.Notification.EMPTY
                     }
             } else if (url.contains(
-                    YouTubeConfig.Notification.ALTERNATIVE_URL)) {
+                    YouTubeConfig.Notification.ALTERNATIVE_URL
+                )
+            ) {
 
                 val uri = URI(url)
                 val path: String = uri.getPath()
@@ -122,11 +126,44 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
                     title = title,
                     description = getDescriptionFromJson(json)
                 )
-                .apply {
-                    thumbUrl = YouTubeConfig.Notification.EMPTY
-                }
+                    .apply {
+                        thumbUrl = YouTubeConfig.Notification.EMPTY
+                    }
             }
         }
         return lastVideo
+    }
+
+    /**
+     * Salva em banco de dados e notifica o usuário
+     * caso os dados que chegaram ao app sejam de um
+     * novo "último vídeo" liberado no canal YouTube
+     * do aplicativo.
+     *
+     * @param lastVideo último vídeo liberado em canal e
+     * que chegou ao aplicativo.
+     */
+    private fun ifNewLastVideoThenSaveAndNotify(lastVideo: LastVideo) {
+
+        UtilDatabase
+            .getInstance(context = this)
+            .getLastVideo {
+
+                if (it == null
+                    || !it.uid.equals(lastVideo.uid)
+                    || !it.title.equals(lastVideo.title)
+                    || !it.description.equals(lastVideo.description) ){
+
+                    UtilDatabase
+                        .getInstance(context = this)
+                        .saveLastVideo(lastVideo = lastVideo)
+
+                    UtilNotification
+                        .getInstance(context = this)
+                        .createBigPictureNotification(
+                            lastVideo = lastVideo
+                        )
+                }
+            }
     }
 }
