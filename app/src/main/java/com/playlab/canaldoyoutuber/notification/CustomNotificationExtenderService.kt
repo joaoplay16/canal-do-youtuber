@@ -1,8 +1,12 @@
 package com.playlab.canaldoyoutuber.notification
+import android.net.UrlQuerySanitizer
 import com.onesignal.NotificationExtenderService
 import com.onesignal.OSNotificationReceivedResult
 import com.playlab.canaldoyoutuber.config.OneSignalConfig
+import com.playlab.canaldoyoutuber.config.YouTubeConfig
+import com.playlab.canaldoyoutuber.model.LastVideo
 import org.json.JSONObject
+import java.net.URI
 
 /**
  * Serviço responsável por interceptar a notificação
@@ -61,4 +65,68 @@ class CustomNotificationExtenderService: NotificationExtenderService() {
         } else {
             OneSignalConfig.Notification.EMPTY
         }
+
+    /**
+     * Gera um objeto [LastVideo] completo de acordo com
+     * os dados JSON recebidos de notificação OneSignal.
+     *
+     * @param json dados JSON obtidos de notificação.
+     * @return objeto [LastVideo] completo.
+     */
+    private fun getLastVideoFromJson(
+        json: JSONObject?
+    ): LastVideo? {
+        /**
+         * Padrão Cláusula de guarda. Se as premissas não
+         * estiverem presentes, então nem mesmo continue
+         * com a execução.
+         */
+        if (json == null
+            || json.isNull(OneSignalConfig.Notification.VIDEO)
+            || json.isNull (OneSignalConfig.Notification.TITLE) ){
+            return null
+        }
+
+        val url = json.getString(OneSignalConfig.Notification.VIDEO)
+        val title = json.getString(OneSignalConfig.Notification.TITLE)
+        var lastVideo: LastVideo? = null
+
+        if (!url.isEmpty() && !title.isEmpty()){
+            val urlQuery = UrlQuerySanitizer(url)
+
+            if (!urlQuery.getValue(YouTubeConfig.Notification.VIDEO_PARAM)
+                    .isNullOrEmpty()
+            ) {
+                lastVideo = LastVideo(
+                    uid = urlQuery.getValue(
+                        YouTubeConfig.Notification.VIDEO_PARAM
+                    ),
+                    title = title,
+                    description = getDescriptionFromJson(json)
+                )
+                    .apply {
+                        thumbUrl = YouTubeConfig.Notification.EMPTY
+                    }
+            } else if (url.contains(
+                    YouTubeConfig.Notification.ALTERNATIVE_URL)) {
+
+                val uri = URI(url)
+                val path: String = uri.getPath()
+                val uid = path
+                    .substring(
+                        path.lastIndexOf('/') + 1
+                    )
+
+                lastVideo = LastVideo(
+                    uid = uid,
+                    title = title,
+                    description = getDescriptionFromJson(json)
+                )
+                .apply {
+                    thumbUrl = YouTubeConfig.Notification.EMPTY
+                }
+            }
+        }
+        return lastVideo
+    }
 }
