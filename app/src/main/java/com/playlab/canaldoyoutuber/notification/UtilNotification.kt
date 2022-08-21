@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.model.LastVideo
 import com.playlab.canaldoyoutuber.ui.MainActivity
@@ -31,6 +32,15 @@ class UtilNotification private constructor(
     private val context: Context
 ) {
     companion object {
+        /**
+         * Constante que contém o identificador único
+         * para todas as notificações que forem criadas
+         * a partir deste app. Não precisamos de trabalho
+         * com acumulação de notificações, então é seguro
+         * seguir está estratégia.
+         */
+        const val NOTIFICATION_ID = 1
+
         /**
          * Constante que contém o identificador único
          * de Notification Channel da notificação push.
@@ -104,22 +114,25 @@ class UtilNotification private constructor(
      * @return [PendingIntent] configurada para
      * abertura de app.
      */
-    @RequiresApi( Build.VERSION_CODES.O )
     private fun getPendingIntent() : PendingIntent {
 
         val intent = Intent(
             context,
             MainActivity::class.java
         )
-        .apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
+            .apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+            }
+
+
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             context,
             0,
             intent,
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+            else  PendingIntent.FLAG_UPDATE_CURRENT
         )
 
         return pendingIntent
@@ -137,7 +150,6 @@ class UtilNotification private constructor(
      * vídeo liberado.
      * @return notificação adequadamente configurada.
      */
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun getNotification(
         lastVideo: LastVideo,
         bitmapBigPicture: Bitmap? = null ) : Notification {
@@ -170,5 +182,32 @@ class UtilNotification private constructor(
         }
 
         return notification.build()
+    }
+
+    /**
+     * Cria toda a configuração de notificação push
+     * (incluindo Notification Channel) do aplicativo.
+     *
+     * @param lastVideo último vídeo liberado em canal e
+     * que chegou ao aplicativo.
+     * @param bitmapBigPicture bitmap da thumb do último
+     * vídeo liberado.
+     */
+    private fun createNotification(
+        lastVideo: LastVideo,
+        bitmapBigPicture: Bitmap? = null ){
+        if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ) {
+            createNotificationChannel()
+        }
+        val notificationBuilder = getNotification(
+            lastVideo = lastVideo,
+            bitmapBigPicture = bitmapBigPicture
+        )
+        NotificationManagerCompat
+            .from( context )
+            .notify(
+                NOTIFICATION_ID,
+                notificationBuilder
+            )
     }
 }
