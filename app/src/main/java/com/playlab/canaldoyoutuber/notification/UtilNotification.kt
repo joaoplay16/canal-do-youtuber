@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.playlab.canaldoyoutuber.R
-import com.playlab.canaldoyoutuber.config.YouTubeConfig.Channel.Companion.CHANNEL_ID
 
 /**
  * Classe utilitária que permite o fácil acesso à
@@ -25,6 +24,12 @@ class UtilNotification private constructor(
     private val context: Context
 ) {
     companion object {
+        /**
+         * Constante que contém o identificador único
+         * de Notification Channel da notificação push.
+         */
+        const val CHANNEL_ID = "new_channel_video"
+
         /**
          * Propriedade responsável por conter a única
          * instância de [UtilNotification] disponível
@@ -73,9 +78,9 @@ class UtilNotification private constructor(
             name,
             importance
         )
-            .apply {
-                this.description = description
-            }
+        .apply {
+            this.description = description
+        }
         val notificationManager = context.getSystemService(
             Context.NOTIFICATION_SERVICE
         ) as NotificationManager?
