@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.model.LastVideo
 import com.playlab.canaldoyoutuber.ui.MainActivity
+import com.playlab.canaldoyoutuber.ui.MainActivityForegroundStatus
 import com.squareup.picasso.Picasso
 
 /**
@@ -221,6 +222,17 @@ class UtilNotification private constructor(
      */
     fun createBigPictureNotification(
         lastVideo: LastVideo ){
+
+        /**
+         * Cláusula de guarda para garantir que a notificação
+         * somente será gerada se o aplicativo NÃO estiver
+         * já aberto em tela (em foreground).
+         */
+        if( MainActivity.APP_FOREGROUND ==
+            MainActivityForegroundStatus.IS_IN_FOREGROUND ) {
+            return
+        }
+
         val bitmapBigPicture = Picasso
             .get()
             .load( lastVideo.thumbUrl )
