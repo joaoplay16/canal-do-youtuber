@@ -14,6 +14,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.model.LastVideo
 import com.playlab.canaldoyoutuber.ui.MainActivity
+import com.squareup.picasso.Picasso
 
 /**
  * Classe utilitária que permite o fácil acesso à
@@ -209,5 +210,25 @@ class UtilNotification private constructor(
                 NOTIFICATION_ID,
                 notificationBuilder
             )
+    }
+
+    /**
+     * Cria uma notificação que pode conter também uma
+     * BigPicture como parte do conteúdo dela.
+     *
+     * @param lastVideo último vídeo liberado em canal e
+     * que chegou ao aplicativo.
+     */
+    fun createBigPictureNotification(
+        lastVideo: LastVideo ){
+        val bitmapBigPicture = Picasso
+            .get()
+            .load( lastVideo.thumbUrl )
+            .get()
+
+        createNotification(
+            lastVideo = lastVideo,
+            bitmapBigPicture = bitmapBigPicture
+        )
     }
 }
