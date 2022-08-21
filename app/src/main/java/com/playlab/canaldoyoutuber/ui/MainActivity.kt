@@ -1,5 +1,7 @@
 package com.playlab.canaldoyoutuber.ui
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -21,7 +23,7 @@ import com.playlab.canaldoyoutuber.ui.fragment.*
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
-    companion object{
+    companion object {
         /**
          * Constante com o identificador único da
          * pilha de fragmentos em memória.
@@ -35,8 +37,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        if( supportFragmentManager.findFragmentByTag( FRAG_STACK_ID )
-            == null ) {
+        if (supportFragmentManager.findFragmentByTag(FRAG_STACK_ID)
+            == null
+        ) {
 
             changeFragment(
                 fragment = LastVideoFragment(),
@@ -45,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         initBottomMenu()
+        removeStatusBarNotification()
     }
 
     /**
@@ -77,7 +81,7 @@ class MainActivity : AppCompatActivity() {
             fragment,
             fragKey
         )
-        fragTransaction.addToBackStack( FRAG_STACK_ID )
+        fragTransaction.addToBackStack(FRAG_STACK_ID)
         fragTransaction.commit()
     }
 
@@ -95,8 +99,7 @@ class MainActivity : AppCompatActivity() {
      * menu.
      * @return identificador único do fragmento.
      */
-    private fun getFragmentInKey( itemId: Int = R.id.last_video )
-            = when( itemId ){
+    private fun getFragmentInKey(itemId: Int = R.id.last_video) = when (itemId) {
         R.id.social_networks -> SocialNetworksFragment.KEY
         R.id.play_lists -> PlayListsFragment.KEY
         R.id.exclusive_groups -> GroupsFragment.KEY
@@ -121,7 +124,7 @@ class MainActivity : AppCompatActivity() {
      * menu.
      * @return objeto fragmento correto.
      */
-    private fun getFragment( itemId: Int = R.id.last_video ) : Fragment {
+    private fun getFragment(itemId: Int = R.id.last_video): Fragment {
         val key = getFragmentInKey(itemId = itemId)
         var fragment = supportFragmentManager
             .findFragmentByTag(key)
@@ -146,9 +149,9 @@ class MainActivity : AppCompatActivity() {
      *
      * @param item item de menu.
      */
-    private fun fragmentOnScreen( item: MenuItem){
-        val fragment = getFragment( itemId = item.id )
-        val fragKey = getFragmentInKey( itemId = item.id )
+    private fun fragmentOnScreen(item: MenuItem) {
+        val fragment = getFragment(itemId = item.id)
+        val fragKey = getFragmentInKey(itemId = item.id)
         changeFragment(
             fragment = fragment,
             fragKey = fragKey
@@ -170,19 +173,18 @@ class MainActivity : AppCompatActivity() {
      * @param view componente visual que teve o evento de
      * toque (clique) disparado.
      */
-    fun openYouTubeChannel( view: View){
+    fun openYouTubeChannel(view: View) {
         val intent = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse( YouTubeConfig.Channel.CHANNEL_URL )
+            Uri.parse(YouTubeConfig.Channel.CHANNEL_URL)
         )
-        if( intent.resolveActivity( packageManager ) != null ){
-            startActivity( intent )
-        }
-        else{
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
             Toast
                 .makeText(
                     this,
-                    getString( R.string.channel_toast_alert ),
+                    getString(R.string.channel_toast_alert),
                     Toast.LENGTH_LONG
                 )
                 .show()
@@ -193,7 +195,7 @@ class MainActivity : AppCompatActivity() {
      * Inicializa o menu principal do aplicativo, o
      * BottomMenu.
      */
-    private fun initBottomMenu(){
+    private fun initBottomMenu() {
         val layoutManager = GridLayoutManager(
             this,
             MenuAdapter.NUMBER_COLUMNS,
@@ -228,5 +230,19 @@ class MainActivity : AppCompatActivity() {
                 FragmentManager.POP_BACK_STACK_INCLUSIVE
             )
         super.onBackPressed()
+    }
+
+    /**
+     * Garante que não haverá notificação do aplicativo
+     * na bandeja de notificações do aparelho quando o
+     * app for aberto.
+     */
+    private fun removeStatusBarNotification() {
+
+        val notificationManager = getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
+
+        notificationManager.cancelAll()
     }
 }
