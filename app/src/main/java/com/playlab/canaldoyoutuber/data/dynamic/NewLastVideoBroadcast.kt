@@ -63,5 +63,7 @@ class NewLastVideoBroadcast(
     ) {
         val lastVideo = data
             .getParcelableExtra<LastVideo>(DATA_KEY)!!
+
+        fragment.newLastVideoData( video = lastVideo )
     }
 }
