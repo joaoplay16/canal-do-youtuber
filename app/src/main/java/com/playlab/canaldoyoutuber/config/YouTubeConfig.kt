@@ -66,4 +66,33 @@ abstract class YouTubeConfig {
         }
 
     }
+
+    abstract class ApiV3 {
+        companion object {
+            /**
+             * Constante com a URL base para acesso à
+             * YouTube Data API.
+             */
+            const val BASE_URL = "https://www.googleapis.com/"
+
+            /**
+             * Constantes com os caminhos URL para
+             * acesso aos dados corretos (vídeo e
+             * PlayLists).
+             */
+            const val VIDEO_PATH = "youtube/v3/search"
+            const val PLAYLISTS_PATH = "youtube/v3/playlists"
+
+            /**
+             * Constantes com as definições de
+             * parâmetros que devem estar junto a URL
+             * final de acesso a dados via YouTube Data
+             * API.
+             */
+            const val PART_PARAM = "snippet"
+            const val MAX_RESULTS_VIDEO_PARAM = "1"
+            const val MAX_RESULTS_PLAYLISTS_PARAM = "500"
+            const val ORDER_PARAM = "date"
+        }
+    }
 }
