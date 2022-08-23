@@ -54,4 +54,16 @@ abstract class YouTubeConfig {
             const val EMPTY = ""
         }
     }
+
+    abstract class Key {
+        companion object {
+            /**
+             * Constante com a chave de API do Google
+             * para que seja possível realizar consultas
+             * à YouTube Data API.
+             */
+            const val GOOGLE_DEV = "AIzaSyCkWpwvwi_MAJmvgB5ZbYRazTuNF0U12Zc"
+        }
+
+    }
 }
