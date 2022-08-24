@@ -13,6 +13,7 @@ import com.playlab.canaldoyoutuber.data.dynamic.UtilDatabase
 import com.playlab.canaldoyoutuber.data.fixed.PlayListsData
 import com.playlab.canaldoyoutuber.databinding.FragmentPlayListsBinding
 import com.playlab.canaldoyoutuber.model.PlayList
+import com.playlab.canaldoyoutuber.network.UtilNetwork
 import com.playlab.canaldoyoutuber.ui.adapter.ListItemAdapter
 
 /**
@@ -253,5 +254,23 @@ class PlayListsFragment : Fragment() {
         activity?.runOnUiThread {
             binding.srlUpdateContent.isRefreshing = status
         }
+    }
+
+    /**
+     * Solicita dados de último vídeo da fonte remota,
+     * YouTube Data API.
+     */
+    private fun retrieveData(){
+        UtilNetwork
+            .getInstance( context = requireActivity() )
+            .retrievePlayLists (
+                callbackSuccess = {
+                    swipeRefreshStatus( status = false )
+                    setUiModel( it )
+                },
+                callbackFailure = {
+                    swipeRefreshStatus( status = false )
+                }
+            )
     }
 }
