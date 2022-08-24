@@ -15,6 +15,7 @@ import com.playlab.canaldoyoutuber.data.dynamic.UtilDatabase
 import com.playlab.canaldoyoutuber.data.fixed.LastVideoData
 import com.playlab.canaldoyoutuber.databinding.FragmentLastVideoBinding
 import com.playlab.canaldoyoutuber.model.LastVideo
+import com.playlab.canaldoyoutuber.network.UtilNetwork
 import com.squareup.picasso.Picasso
 
 /**
@@ -234,4 +235,18 @@ class LastVideoFragment : Fragment() {
         lastVideo = video
         setUiModel( lVideo = video )
     }
+
+    /**
+     * Configura o estado atual do componente visual
+     * SwipeRefresh.
+     *
+     * @param status estado atual do swipe.
+     */
+    private fun swipeRefreshStatus( status : Boolean ){
+        activity?.runOnUiThread {
+            binding.srlUpdateContent.isRefreshing = status
+        }
+    }
+
+
 }
