@@ -59,6 +59,8 @@ class PlayListsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setListener()
+
         initPlayListList()
 
         if( playLists.isNotEmpty() ){
