@@ -248,5 +248,22 @@ class LastVideoFragment : Fragment() {
         }
     }
 
+    /**
+     * Solicita dados de último vídeo da fonte remota,
+     * YouTube Data API.
+     */
+    private fun retrieveData(){
+        UtilNetwork
+            .getInstance( context = requireActivity() )
+            .retrieveLastVideo(
+                callbackSuccess = {
+                    swipeRefreshStatus( status = false )
+                    setUiModel( lVideo = it )
+                },
+                callbackFailure = {
+                    swipeRefreshStatus( status = false )
+                }
+            )
+    }
 
 }
