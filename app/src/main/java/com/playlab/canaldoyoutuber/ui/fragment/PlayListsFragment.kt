@@ -242,4 +242,16 @@ class PlayListsFragment : Fragment() {
             )
         }
     }
+
+    /**
+     * Configura o estado atual do componente visual
+     * SwipeRefresh.
+     *
+     * @param status estado atual do swipe.
+     */
+    private fun swipeRefreshStatus( status : Boolean ){
+        activity?.runOnUiThread {
+            binding.srlUpdateContent.isRefreshing = status
+        }
+    }
 }
