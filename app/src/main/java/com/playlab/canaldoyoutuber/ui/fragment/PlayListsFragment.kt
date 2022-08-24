@@ -89,7 +89,7 @@ class PlayListsFragment : Fragment() {
                     }
                     setUiModel( pLists = auxPlayList )
                 }
-            }
+        }
     }
 
     /**
@@ -273,4 +273,16 @@ class PlayListsFragment : Fragment() {
                 }
             )
     }
+
+    /**
+     * Configura o listener de swipe do componente
+     * visual SwipeRefresh.
+     */
+    private fun setListener(){
+        binding.srlUpdateContent.setOnRefreshListener {
+            swipeRefreshStatus( status = true )
+            retrieveData()
+        }
+    }
+
 }
