@@ -3,6 +3,7 @@ package com.playlab.canaldoyoutuber.network
 import android.content.Context
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
 import com.playlab.canaldoyoutuber.model.LastVideo
+import com.playlab.canaldoyoutuber.model.PlayList
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -98,4 +99,42 @@ class UtilNetwork private constructor(
             catch( e: Exception ){}
         }
     }
+    /**
+     * Realiza a comunicação remota com o servidor de dados do
+     * YouTube para obter os dados de PlayLists disponíveis
+     * em canal.
+     *
+     * @param networkRequestMode modelo de conexão com o servidor
+     * remoto.
+     * @param callbackSuccess callback que deve ser executado
+     * em caso de resposta bem sucedida.
+     * @param callbackFailure callback que deve ser executado
+     * em caso de resposta falha.
+     */
+    fun retrievePlayLists(
+        networkRequestMode: NetworkRequestMode =
+            NetworkRequestMode.ASYNCHRONOUS,
+        callbackSuccess: (List<PlayList>)->Unit = {},
+        callbackFailure: (NetworkRetrieveDataProblem)->Unit = {} ){
+
+        val service = getYouTubeService()
+        val call = service.playLists()
+        val playListsResponse = PlayListsResponse(
+            context = context,
+            callbackSuccess = callbackSuccess,
+            callbackFailure = callbackFailure
+        )
+        if( networkRequestMode == NetworkRequestMode.ASYNCHRONOUS ){
+            call.enqueue( playListsResponse )
+        }
+        else{
+            try{
+                playListsResponse.parse(
+                    response = call.execute()
+                )
+            }
+            catch( e: Exception ){}
+        }
+    }
+
 }
