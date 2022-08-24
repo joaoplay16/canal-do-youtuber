@@ -151,6 +151,11 @@ class LastVideoFragment : Fragment() {
         binding.llLastVideoContainer.setOnClickListener {
             openVideoOnYouTube()
         }
+
+        binding.srlUpdateContent.setOnRefreshListener {
+            swipeRefreshStatus( status = true )
+            retrieveData()
+        }
     }
     /**
      * Invoca o aplicativo do YouTube para que o usuário
