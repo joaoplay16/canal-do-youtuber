@@ -2,6 +2,7 @@ package com.playlab.canaldoyoutuber.network
 
 import android.content.Context
 import com.playlab.canaldoyoutuber.config.YouTubeConfig
+import com.playlab.canaldoyoutuber.model.LastVideo
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -60,4 +61,41 @@ class UtilNetwork private constructor(
         .build()
         .create( YouTubeService::class.java )
 
+    /**
+     * Realiza a comunicação remota com o servidor de dados do
+     * YouTube para obter os dados do "último vídeo" liberado
+     * em canal.
+     *
+     * @param networkRequestMode modelo de conexão com o servidor
+     * remoto.
+     * @param callbackSuccess callback que deve ser executado
+     * em caso de resposta bem sucedida.
+     * @param callbackFailure callback que deve ser executado
+     * em caso de resposta falha.
+     */
+    fun retrieveLastVideo(
+        networkRequestMode: NetworkRequestMode =
+            NetworkRequestMode.ASYNCHRONOUS,
+        callbackSuccess: (LastVideo)->Unit = {},
+        callbackFailure: (NetworkRetrieveDataProblem)->Unit = {} ){
+
+        val service = getYouTubeService()
+        val call = service.lastVideo()
+        val lastVideoResponse = LastVideoResponse(
+            context = context,
+            callbackSuccess = callbackSuccess,
+            callbackFailure = callbackFailure
+        )
+        if( networkRequestMode == NetworkRequestMode.ASYNCHRONOUS ){
+            call.enqueue( lastVideoResponse )
+        }
+        else{
+            try{
+                lastVideoResponse.parse(
+                    response = call.execute()
+                )
+            }
+            catch( e: Exception ){}
+        }
+    }
 }
