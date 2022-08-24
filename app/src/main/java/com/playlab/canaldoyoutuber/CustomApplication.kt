@@ -1,7 +1,12 @@
 package com.playlab.canaldoyoutuber
 
 import android.app.Application
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.onesignal.OneSignal
+import com.playlab.canaldoyoutuber.network.worker.CatchChannelDataWorker
+import java.util.concurrent.TimeUnit
 
 /**
  * Classe de sistema e de objeto único enquanto
@@ -32,20 +37,21 @@ class CustomApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         oneSignalInit()
+        backgroundWork()
     }
     /**
-    * Inicializa o OneSignal e registra o
-    * usuário do app para que ele já consiga
-    * receber as notificações push do canal
-    * do aplicativo.
-    *
-    * Com a configuração a seguir é preciso
-    * que também tenha definido no aplicativo
-    * um serviço do tipo
-    * [NotificationExtenderService] para que as
-    * notificações push sejam interceptadas
-    * e trabalhadas de maneira personalizada.
-    */
+     * Inicializa o OneSignal e registra o
+     * usuário do app para que ele já consiga
+     * receber as notificações push do canal
+     * do aplicativo.
+     *
+     * Com a configuração a seguir é preciso
+     * que também tenha definido no aplicativo
+     * um serviço do tipo
+     * [NotificationExtenderService] para que as
+     * notificações push sejam interceptadas
+     * e trabalhadas de maneira personalizada.
+     */
     private fun oneSignalInit() {
         OneSignal.startInit( this )
             .inFocusDisplaying(
@@ -54,4 +60,33 @@ class CustomApplication: Application() {
             .unsubscribeWhenNotificationsAreDisabled( true )
             .init()
     }
+
+    /**
+     * Inicializa o WorkManager para execuções
+     * não precisas, mas intervaladas, em
+     * background.
+     */
+    private fun backgroundWork(){
+
+        val request = PeriodicWorkRequestBuilder<CatchChannelDataWorker>(
+            CatchChannelDataWorker.REPEAT_INTERVAL,
+            TimeUnit.HOURS
+        ).build()
+
+        /**
+         * Configuração de WorkManager que
+         * garante que mesmo com uma
+         * "re-invocação" de enfileiramento de
+         * "work" não haverá work repetido em
+         * lista de execução do WorkManager.
+         */
+        WorkManager
+            .getInstance( this )
+            .enqueueUniquePeriodicWork(
+                CatchChannelDataWorker.NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                request
+            )
+    }
+
 }
