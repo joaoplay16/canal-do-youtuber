@@ -182,6 +182,8 @@ class PlayListsFragment : Fragment() {
      */
     private fun uiDataStatus(status: UiFragLoadDataStatus) {
         requireActivity().runOnUiThread {
+            swipeRefreshStatus( status = false )
+
             var rvPlayLists = View.GONE
 
             var rlNoDataMessageContainer = View.VISIBLE
@@ -259,9 +261,10 @@ class PlayListsFragment : Fragment() {
     }
 
     /**
-     * Solicita dados de último vídeo da fonte remota,
+     * Solicita dados de PlayLists da fonte remota,
      * YouTube Data API.
      */
+
     private fun retrieveData(){
         UtilNetwork
             .getInstance( context = requireActivity() )
