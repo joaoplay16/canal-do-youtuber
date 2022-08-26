@@ -28,13 +28,7 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".notification.CustomNotificationExtenderService"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE">
-            <intent-filter>
-                <action android:name="com.onesignal.NotificationExtender" />
-            </intent-filter>
-        </service>
+        <meta-data android:name="com.onesignal.NotificationServiceExtension"
+            android:value="com.playlab.canaldoyoutuber.notification.NotificationServiceExtension" />
     </application>
 </manifest>

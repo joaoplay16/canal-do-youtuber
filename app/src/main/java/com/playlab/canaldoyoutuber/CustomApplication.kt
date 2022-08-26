@@ -5,6 +5,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.onesignal.OneSignal
+import com.playlab.canaldoyoutuber.config.OneSignalConfig
 import com.playlab.canaldoyoutuber.network.worker.CatchChannelDataWorker
 import java.util.concurrent.TimeUnit
 
@@ -53,12 +54,12 @@ class CustomApplication: Application() {
      * e trabalhadas de maneira personalizada.
      */
     private fun oneSignalInit() {
-        OneSignal.startInit( this )
-            .inFocusDisplaying(
-                OneSignal.OSInFocusDisplayOption.Notification
-            )
-            .unsubscribeWhenNotificationsAreDisabled( true )
-            .init()
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(OneSignalConfig.App.ID);
     }
 
     /**
