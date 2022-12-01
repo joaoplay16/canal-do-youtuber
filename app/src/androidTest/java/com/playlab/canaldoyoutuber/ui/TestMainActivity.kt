@@ -8,10 +8,7 @@ import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.google.common.truth.Truth.assertThat
 import com.playlab.canaldoyoutuber.R
 import com.playlab.canaldoyoutuber.ui.adapter.MenuViewHolder
-import com.playlab.canaldoyoutuber.ui.fragment.AboutChannelFragment
-import com.playlab.canaldoyoutuber.ui.fragment.GroupsFragment
-import com.playlab.canaldoyoutuber.ui.fragment.PlayListsFragment
-import com.playlab.canaldoyoutuber.ui.fragment.SocialNetworksFragment
+import com.playlab.canaldoyoutuber.ui.fragment.*
 import org.junit.Rule
 import org.junit.Test
 
@@ -90,6 +87,25 @@ class TestMainActivity {
             val currentFragment = activity
                 .supportFragmentManager
                 .findFragmentByTag(AboutChannelFragment.KEY)
+
+            assertThat(currentFragment).isNotNull()
+            assertThat(currentFragment?.isVisible).isTrue()
+        }
+    }
+
+    @Test
+    fun clickBooksMenuItem_showBooksFragment (){
+
+        onView(withId(R.id.rv_menu)).perform(
+            RecyclerViewActions.actionOnItemAtPosition<MenuViewHolder>(
+                5,
+                click()
+            )
+        )
+        activityScenarioRule.scenario.onActivity { activity ->
+            val currentFragment = activity
+                .supportFragmentManager
+                .findFragmentByTag(BooksFragment.KEY)
 
             assertThat(currentFragment).isNotNull()
             assertThat(currentFragment?.isVisible).isTrue()
